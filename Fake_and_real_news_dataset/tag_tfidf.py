@@ -9,16 +9,15 @@ nltk.download("universal_tagset")
 #%%
 def load_data(fname):
     data = pd.read_csv(fname)
-    real_data = data[data['label'] == "Real"]
-    fake_data = data[data['label'] == "Fake"]
-    return (real_data, fake_data)
 
-def load_title_content(data):
     titles_df = data["title"].dropna()
     titles = " ".join(list(titles_df))
+
     text_df = data["text"].dropna()
     contents = " ".join(list(text_df))
+
     return (titles, contents)
+
 
 #%%
 def filtered_tag(text, tag):
@@ -42,10 +41,8 @@ def save_all(data, fnames):
 
 #%%
 if __name__ == "__main__":
-    real_data, fake_data = load_data("text.csv")
-
-    for data, fname in [(real_data, "real"), (fake_data, "fake")]:
-        titles, contents = load_title_content(data)
+    for fname in ["Fake.csv", "True.csv"]:
+        titles, contents = load_data(fname)
         title_verbs = filtered_tag(titles, "VERB")
         title_nouns = filtered_tag(titles, "NOUN")
         title_adjs = filtered_tag(titles, "ADJ")
