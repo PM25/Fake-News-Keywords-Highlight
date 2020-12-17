@@ -1,0 +1,44 @@
+body {
+    background-color: #d0e8f2;
+    color: #456268;
+}
+
+.textarea {
+    overflow: auto;
+}
+
+#input-txt {
+    background-color: white;
+}
+
+.highlight {
+    background-color: wheat;
+    border-radius: 0.2em;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#confirm-btn {
+    display: flex;
+    flex-direction: column;
+}
+
+#input-txt {
+    width: 80vw;
+    height: 65vh;
+    border: 1px solid;
+    border-radius: 0.3em;
+    padding: 1em;
+    font-size: 1.5em;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
