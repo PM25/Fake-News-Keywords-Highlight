@@ -35,17 +35,18 @@ function main() {
     });
 
     let wordcloud = document.getElementById("wordcloud");
-    wordcloud.addEventListener("click", ()=>{
+    wordcloud.addEventListener("click", (e)=>{
         let word_counts = get_words(input_area, database);
-        let link = "http://docusky.org.tw/DocuSky/docuTools/WordCloudLite/WordCloudLite.html?data="
+        
+        let word_cloud_str = "";
         for (let [k, v] of word_counts) {
-            link += k + "," + v + ";"
+            word_cloud_str += k + "," + v + ";"
         }
-        window.open(link, '_blank');
+        invokeWordCloudLite(e, word_cloud_str);
     });
 
     let wordcloud_all = document.getElementById("wordcloud-all");
-    wordcloud_all.addEventListener("click", ()=>{
+    wordcloud_all.addEventListener("click", (e)=>{
         let text = input_area.innerText || input_area.textContent;
         text = text.replace(/[\W_]+/g, " ");
         let words = text.split(' ');
@@ -56,11 +57,12 @@ function main() {
             }
         });
 
-        let link = "http://docusky.org.tw/DocuSky/docuTools/WordCloudLite/WordCloudLite.html?data="
+        let word_cloud_str = ""
         for (let [k, v] of Object.entries(word_counts)) {
-            link += k + "," + v + ";"
+            word_cloud_str += k + "," + v + ";"
         }
-        window.open(link, '_blank');
+
+        invokeWordCloudLite(e, word_cloud_str);
     });
 
     input_area.addEventListener("input", ()=>{
