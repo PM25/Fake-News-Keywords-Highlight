@@ -23,7 +23,6 @@ function main() {
     let database = {"data": "", "updating": false};
     wrap_text(input_area);
     
-    let switchbtnstatus = false;
     let switchbtn = document.getElementById("switchbtn");
     switchbtn.addEventListener("click", ()=>{
         switchbtn.classList.toggle("active-btn");
@@ -37,6 +36,16 @@ function main() {
 
     let wordcloud = document.getElementById("wordcloud");
     wordcloud.addEventListener("click", ()=>{
+        let word_counts = get_words(input_area, database);
+        let link = "http://docusky.org.tw/DocuSky/docuTools/WordCloudLite/WordCloudLite.html?data="
+        for (let [k, v] of word_counts) {
+            link += k + "," + v + ";"
+        }
+        window.open(link, '_blank');
+    });
+
+    let wordcloud_all = document.getElementById("wordcloud-all");
+    wordcloud_all.addEventListener("click", ()=>{
         let text = input_area.innerText || input_area.textContent;
         text = text.replace(/[\W_]+/g, " ");
         let words = text.split(' ');
@@ -46,7 +55,7 @@ function main() {
                 word_counts[word] = (word_counts[word] || 0) + 1
             }
         });
-        
+
         let link = "http://docusky.org.tw/DocuSky/docuTools/WordCloudLite/WordCloudLite.html?data="
         for (let [k, v] of Object.entries(word_counts)) {
             link += k + "," + v + ";"
@@ -126,6 +135,31 @@ function execute(input_area, scale, database) {
             }
         });
         
+    }
+
+    function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+    }
+}
+
+function get_words(input_area, database) {
+    // console.log(database.updating);
+    if(database.updating == true) {
+        setTimeout(() => { execute(input_area, scale, database); }, 50);
+    } else {
+        let words_count = {}
+        let threshold_slider = document.getElementById("threshold-slider");
+        let threshold = threshold_slider.value / 20;
+
+        let txt = input_area.innerText || input_area.textContent;
+        let word_score = database.data;
+        let unique_words = txt.match(/\b(\w+)\b/g).filter(onlyUnique);
+        unique_words.forEach((word) => {
+            if(word_score[word.toLowerCase()] >= threshold) {
+                words_count[word.toLowerCase()] = (words_count[word.toLowerCase()] || 0) + 1 
+            }
+        });
+        return Object.entries(words_count)
     }
 
     function onlyUnique(value, index, self) {
