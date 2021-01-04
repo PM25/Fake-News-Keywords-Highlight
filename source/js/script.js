@@ -21,6 +21,7 @@ function main() {
     let scale = chroma.scale(['#70a8ffaa', '#70a8ffaa', '#e6e6e6ff', '#ff6b63ff']).mode('lch');
     let input_area = document.querySelector("#input-txt");
     let database = {"data": "", "updating": false};
+    wrap_text(input_area);
     
     let switchbtnstatus = false;
     let switchbtn = document.getElementById("switchbtn");
@@ -30,21 +31,23 @@ function main() {
             execute(input_area, scale, database);
         } else {
             input_area.innerHTML = input_area.innerText || input_area.textContent;
+            wrap_text(input_area);
         }
     });
 
     let wordcloud = document.getElementById("wordcloud");
     wordcloud.addEventListener("click", ()=>{
-        text = input_area.innerText || input_area.textContent;
+        let text = input_area.innerText || input_area.textContent;
         text = text.replace(/[\W_]+/g, " ");
-        words = text.split(' ');
-        word_counts = {}
+        let words = text.split(' ');
+        let word_counts = {}
         words.forEach((word) => {
             if(word.length > 0) {
                 word_counts[word] = (word_counts[word] || 0) + 1
             }
         });
-        link = "http://docusky.org.tw/DocuSky/docuTools/WordCloudLite/WordCloudLite.html?data="
+        
+        let link = "http://docusky.org.tw/DocuSky/docuTools/WordCloudLite/WordCloudLite.html?data="
         for (let [k, v] of Object.entries(word_counts)) {
             link += k + "," + v + ";"
         }
@@ -52,9 +55,10 @@ function main() {
     });
 
     input_area.addEventListener("input", ()=>{
-        // if(switchbtnstatus == true) {
-        //     execute(input_area, scale, database);
-        // }
+        wrap_text(input_area);
+        if(switchbtn.classList.contains("active-btn")) {
+            execute(input_area, scale, database);
+        }
     });
 
     let dataset_dropdown = document.querySelector("#dataset-dropdown");
@@ -70,7 +74,7 @@ function main() {
         li.addEventListener("click", ()=>{
             dataset_dropdown.querySelector(".selected").innerText = li.innerText;
             update_data(li.innerText, database);
-            if(switchbtnstatus == true) {
+            if(switchbtn.classList.contains("active-btn")) {
                 execute(input_area, scale, database);
             }
         });
@@ -80,10 +84,15 @@ function main() {
         threshold_value = document.getElementById("threshold-value");
     threshold_slider.addEventListener("input", ()=>{
         threshold_value.innerHTML = threshold_slider.value / 100;
-        if(switchbtnstatus == true) {
+        if(switchbtn.classList.contains("active-btn")) {
             execute(input_area, scale, database);
         }
     });
+}
+
+function wrap_text(input_area) {
+    let text = input_area.innerText || input_area.textContent;
+    input_area.innerHTML = text.replace(/(\w+)/g, "<span class='\$1 word-span'>\$1</span>");
 }
 
 function execute(input_area, scale, database) {
@@ -91,12 +100,17 @@ function execute(input_area, scale, database) {
     if(database.updating == true) {
         setTimeout(() => { execute(input_area, scale, database); }, 50);
     } else {
-        input_area.innerHTML = input_area.innerText || input_area.textContent;
+        // input_area.innerHTML = input_area.innerText || input_area.textContent;
+        let all_words = document.querySelectorAll(".word-span");
+        all_words.forEach((word)=>{ 
+            word.style.backgroundColor = "";
+        });
     
         let threshold_slider = document.getElementById("threshold-slider");
         let threshold = threshold_slider.value / 100;
 
         let txt = input_area.innerText || input_area.textContent;
+        
         let word_score = database.data;
         let unique_words = txt.match(/\b(\w+)\b/g).filter(onlyUnique);
         unique_words.forEach((word) => {
@@ -104,11 +118,11 @@ function execute(input_area, scale, database) {
                 let scale_ratio = word_score[word.toLowerCase()].toPrecision(2);
                 let color = scale(scale_ratio).hex();
                 // the match word can't have any character next to it
-                let re = new RegExp("([^a-zA-Z<>])(" + word + ")([^a-zA-Z<>])","g");
-                let text = " " + input_area.innerHTML + " ";
-                input_area.innerHTML = text.replace(re, "\$1<span class='highlight' style='background:"+color+"'>\$2</span>\$3");
+                let selected_words = document.querySelector("#input-txt ." + word);
+                selected_words.style.backgroundColor = color;
             }
         });
+        
     }
 
     function onlyUnique(value, index, self) {
