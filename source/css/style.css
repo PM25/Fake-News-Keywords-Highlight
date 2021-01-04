@@ -1,4 +1,5 @@
 @import url("https://unpkg.com/simplebar@latest/dist/simplebar.css");
+@import url("https://use.fontawesome.com/releases/v5.5.0/css/all.css");
 
 body {
     background-color: #d0e8f2;
@@ -45,7 +46,7 @@ main {
 
 #input-txt {
     width: 80vw;
-    height: 75vh;
+    height: 70vh;
     border: 1px solid;
     border-radius: 0.3em;
     padding: 1em;
@@ -53,22 +54,51 @@ main {
 }
 
 .toolbar {
+    position: fixed;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    right: 2em;
+    bottom: 0;
+    background-color: #fffd;
+    font-size: 1.25em;
+}
+
+.toolbar .button {
+    padding: 0.5em;
+    cursor: pointer;
+}
+
+.toolbar .button:hover {
+    background-color: #ccce;
+}
+
+.toolbar .slider {
+    padding: 0.5em;
+}
+
+.active-btn {
+    background-color: #ccce;
 }
 
 #dataset-dropdown {
     display: flex;
     font-size: 0.9em;
     cursor: pointer;
-    background: #fff9;
-    padding: 0.5em;
-    border-radius: 0.3em;
+
     margin: 0 1em;
 }
 
-#dataset-dropdown:hover {
+#dataset-dropdown .selected {
+    padding: 0.5em;
+    border-radius: 0.3em;
+    background: #fff9;
+    width: 13em;
+    text-align: center;
+}
+
+#dataset-dropdown .selected:hover {
     background: #fffd;
 }
 
@@ -78,6 +108,8 @@ main {
     background-color: #f9f9f9;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     border-radius: 0.3em;
+    width: 13em;
+    padding: 0.5em;
     z-index: 1;
 }
 

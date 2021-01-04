@@ -18,22 +18,37 @@ const _ = undefined;
 
 // start from here
 function main() { 
-    let scale = chroma.scale(['#d0e8f2', '#d0e8f2', '#e6e6e6', '#ff9b93']).mode('lch');
+    let scale = chroma.scale(['#70a8ffaa', '#70a8ffaa', '#e6e6e6ff', '#ff6b63ff']).mode('lch');
     let input_area = document.querySelector("#input-txt");
     let database = {"data": "", "updating": false};
+    
     let switchbtnstatus = false;
-
     let switchbtn = document.getElementById("switchbtn");
     switchbtn.addEventListener("click", ()=>{
-        if(switchbtnstatus == true) {
-            input_area.innerHTML = input_area.innerText || input_area.textContent;
-            switchbtnstatus = false;
-            switchbtn.innerText = "OFF";
-        } else {
+        switchbtn.classList.toggle("active-btn");
+        if(switchbtn.classList.contains("active-btn")) {
             execute(input_area, scale, database);
-            switchbtnstatus = true;
-            switchbtn.innerText = "ON";
+        } else {
+            input_area.innerHTML = input_area.innerText || input_area.textContent;
         }
+    });
+
+    let wordcloud = document.getElementById("wordcloud");
+    wordcloud.addEventListener("click", ()=>{
+        text = input_area.innerText || input_area.textContent;
+        text = text.replace(/[\W_]+/g, " ");
+        words = text.split(' ');
+        word_counts = {}
+        words.forEach((word) => {
+            if(word.length > 0) {
+                word_counts[word] = (word_counts[word] || 0) + 1
+            }
+        });
+        link = "http://docusky.org.tw/DocuSky/docuTools/WordCloudLite/WordCloudLite.html?data="
+        for (let [k, v] of Object.entries(word_counts)) {
+            link += k + "," + v + ";"
+        }
+        window.open(link, '_blank');
     });
 
     input_area.addEventListener("input", ()=>{
