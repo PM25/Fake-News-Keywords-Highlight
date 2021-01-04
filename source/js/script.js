@@ -17,12 +17,12 @@ const _ = undefined;
 
 
 // start from here
-function main() { 
+function main() {
     let scale = chroma.scale(['#70a8ffaa', '#70a8ffaa', '#e6e6e6ff', '#ff6b63ff']).mode('lch');
     let input_area = document.querySelector("#input-txt");
     let database = {"data": "", "updating": false};
     wrap_text(input_area);
-    
+
     let switchbtn = document.getElementById("switchbtn");
     switchbtn.addEventListener("click", ()=>{
         switchbtn.classList.toggle("active-btn");
@@ -37,12 +37,12 @@ function main() {
     let wordcloud = document.getElementById("wordcloud");
     wordcloud.addEventListener("click", (e)=>{
         let word_counts = get_words(input_area, database);
-        
+
         let word_cloud_str = "";
         for (let [k, v] of word_counts) {
             word_cloud_str += k + "," + v + ";"
         }
-        invokeWordCloudLite(e, word_cloud_str);
+        invokeWordCloudLite(e, "Color Scale Word Cloud", word_cloud_str);
     });
 
     let wordcloud_all = document.getElementById("wordcloud-all");
@@ -62,7 +62,7 @@ function main() {
             word_cloud_str += k + "," + v + ";"
         }
 
-        invokeWordCloudLite(e, word_cloud_str);
+        invokeWordCloudLite(e, "All Word Cloud",word_cloud_str);
     });
 
     input_area.addEventListener("input", ()=>{
@@ -91,7 +91,7 @@ function main() {
     });
 
     let threshold_slider = document.getElementById("threshold-slider"),
-        threshold_value = document.getElementById("threshold-value"), 
+        threshold_value = document.getElementById("threshold-value"),
         last_value = (threshold_slider.value / 20);
     threshold_slider.addEventListener("input", ()=>{
         let value = (threshold_slider.value / 20)
@@ -115,10 +115,10 @@ function execute(input_area, scale, database) {
     } else {
         // input_area.innerHTML = input_area.innerText || input_area.textContent;
         let all_words = document.querySelectorAll(".word-span");
-        all_words.forEach((word)=>{ 
+        all_words.forEach((word)=>{
             word.style.backgroundColor = "";
         });
-    
+
         let threshold_slider = document.getElementById("threshold-slider");
         let threshold = threshold_slider.value / 20;
 
@@ -136,7 +136,7 @@ function execute(input_area, scale, database) {
                 });
             }
         });
-        
+
     }
 
     function onlyUnique(value, index, self) {
@@ -158,7 +158,7 @@ function get_words(input_area, database) {
         let unique_words = txt.match(/\b(\w+)\b/g).filter(onlyUnique);
         unique_words.forEach((word) => {
             if(word_score[word.toLowerCase()] >= threshold) {
-                words_count[word.toLowerCase()] = (words_count[word.toLowerCase()] || 0) + 1 
+                words_count[word.toLowerCase()] = (words_count[word.toLowerCase()] || 0) + 1
             }
         });
         return Object.entries(words_count)

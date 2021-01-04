@@ -1,8 +1,7 @@
-const invokeWordCloudLite = function(evt, wordCloudString) {        // 2019-09-14: WordCloud Lite 
+const invokeWordCloudLite = function(evt, title = "WordCloudLite", wordCloudString) {        // 2019-09-14: WordCloud Lite
    var url = "http://docusky.org.tw/DocuSky/docuTools/WordCloudLite/WordCloudLite.html?data=" + wordCloudString;
       var iframeWidth = 640;
       var iframeHeight = 320;
-      var title = "WordCloudLite";
       var backgroundColor = '#FFFFFF';
       var iframeId = showUrlIframe(evt, url, title, iframeWidth, iframeHeight, backgroundColor);
       console.log(iframeId);
