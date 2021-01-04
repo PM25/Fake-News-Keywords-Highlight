@@ -136,12 +136,12 @@ function execute(input_area, scale, database) {
 function update_data(fname, database) {
     database.updating = true;
     if(fname == "Fake and Real News") {
-        read_file("source/data/Fake_and_real_news_dataset.json", (data)=>{
+        read_file("source/data/Fake_and_real_news_dataset_stopword.json", (data)=>{
             database.data = JSON.parse(data);
             database.updating = false;
         });
     } else if(fname == "Source based Fake News") {
-        read_file("source/data/Source_based_Fake_News_Classification.json", (data)=>{
+        read_file("source/data/Source_based_Fake_News_Classification_stopword.json", (data)=>{
             database.data = JSON.parse(data);
             database.updating = false;
         })
