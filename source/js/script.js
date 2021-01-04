@@ -55,7 +55,6 @@ function main() {
     });
 
     input_area.addEventListener("input", ()=>{
-        wrap_text(input_area);
         if(switchbtn.classList.contains("active-btn")) {
             execute(input_area, scale, database);
         }
@@ -81,11 +80,14 @@ function main() {
     });
 
     let threshold_slider = document.getElementById("threshold-slider"),
-        threshold_value = document.getElementById("threshold-value");
+        threshold_value = document.getElementById("threshold-value"), 
+        last_value = (threshold_slider.value / 20);
     threshold_slider.addEventListener("input", ()=>{
-        threshold_value.innerHTML = threshold_slider.value / 100;
-        if(switchbtn.classList.contains("active-btn")) {
+        let value = (threshold_slider.value / 20)
+        threshold_value.innerHTML = value.toFixed(2);
+        if(switchbtn.classList.contains("active-btn") && value != last_value) {
             execute(input_area, scale, database);
+            last_value = value;
         }
     });
 }
@@ -107,10 +109,9 @@ function execute(input_area, scale, database) {
         });
     
         let threshold_slider = document.getElementById("threshold-slider");
-        let threshold = threshold_slider.value / 100;
+        let threshold = threshold_slider.value / 20;
 
         let txt = input_area.innerText || input_area.textContent;
-        
         let word_score = database.data;
         let unique_words = txt.match(/\b(\w+)\b/g).filter(onlyUnique);
         unique_words.forEach((word) => {
@@ -118,8 +119,10 @@ function execute(input_area, scale, database) {
                 let scale_ratio = word_score[word.toLowerCase()].toPrecision(2);
                 let color = scale(scale_ratio).hex();
                 // the match word can't have any character next to it
-                let selected_words = document.querySelector("#input-txt ." + word);
-                selected_words.style.backgroundColor = color;
+                let selected_words = document.querySelectorAll("#input-txt ." + word);
+                selected_words.forEach((word)=>{
+                    word.style.backgroundColor = color;
+                });
             }
         });
         
